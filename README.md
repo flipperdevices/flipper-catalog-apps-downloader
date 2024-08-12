@@ -21,8 +21,8 @@ For development:
 
 Download source code for applications specific sdk
 
-`python main.py download_bundles --output some_results --api 69.0`
+`python main.py --output some_results --api 69.0`
 
-`python main.py download_bundles --output some_results --api 69.0 --target f7`
+`python main.py --output some_results --api 69.0 --target f7`
 
-`python main.py download_bundles --output some_results --api 69.0 --target f7 --host http://localhost:8080`
+`python main.py --output some_results --api 69.0 --target f7 --host http://localhost:8080`
