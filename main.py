@@ -58,23 +58,24 @@ class FlipperSuccessBuildDownloader:
 
         def get_compatible_builds(application_versions: list) -> list:
             try:
-                for index, application_version in enumerate(application_versions):
-                    print(
-                        f'({index}/{len(application_versions)}) Application: {application_version["alias"]}, '
-                        f'version: {application_version["name"]}'
-                    )
-                    application_version_bundle_response = requests.get(
-                        f'{self.args.host}/api/v0/0/application/version/{application_version["_id"]}/bundle',
-                    )
-                    if application_version_bundle_response.status_code != 200:
-                        print(f'Bundle not found for {self.args.target} {self.args.api}')
-                    else:
-                        application_build_file_name = (
-                            f'{self.args.output}/app-{application_version["alias"]}-'
-                            f'{application_version["name"]}-'
-                            f'{self.args.target}-{self.args.api}'
+                with requests.Session() as session:
+                    for index, application_version in enumerate(application_versions):
+                        print(
+                            f'({index}/{len(application_versions)}) Application: {application_version["alias"]}, '
+                            f'version: {application_version["name"]}'
                         )
-                        self.save_file(application_build_file_name, application_version_bundle_response.content)
+                        application_version_bundle_response = session.get(
+                            f'{self.args.host}/api/v0/0/application/version/{application_version["_id"]}/bundle',
+                        )
+                        if application_version_bundle_response.status_code != 200:
+                            print(f'Bundle not found for {self.args.target} {self.args.api}')
+                        else:
+                            application_build_file_name = (
+                                f'{self.args.output}/app-{application_version["alias"]}-'
+                                f'{application_version["name"]}-'
+                                f'{self.args.target}-{self.args.api}'
+                            )
+                            self.save_file(application_build_file_name, application_version_bundle_response.content)
             except Exception as ex:
                 raise RuntimeError('Failed to get applications') from ex
             return application_versions
